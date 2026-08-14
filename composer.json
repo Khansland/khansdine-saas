@@ -24,7 +24,8 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "laravel/tinker"
+                "laravel/tinker",
+                "khansdine/subdomain-shared"
             ]
         }
     }
