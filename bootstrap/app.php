@@ -16,6 +16,18 @@ return Application::configure(basePath: dirname(__DIR__))
         // clear. The SESSION cookie is a different matter entirely: it is named
         // and scoped for this host alone in .env, so a console session is never
         // sent to a tenant and a tenant's session is never sent here.
+        // This host will sit BEHIND the Cloudflare proxy, unlike the demo. The
+        // origin then sees plain http and Cloudflare's address, so without this
+        // the rate limiter would key every visitor to the same address and
+        // every generated link would be http. Trusting the proxy headers is
+        // safe here because nothing but Cloudflare can reach the origin on 443
+        // once the record is proxied - and if that ever changes, so must this.
+        $middleware->trustProxies(at: '*', headers:
+            Illuminate\Http\Request::HEADER_X_FORWARDED_FOR
+            | Illuminate\Http\Request::HEADER_X_FORWARDED_HOST
+            | Illuminate\Http\Request::HEADER_X_FORWARDED_PORT
+            | Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO);
+
         $middleware->encryptCookies(except: ['kd_locale']);
 
         $middleware->web(append: [

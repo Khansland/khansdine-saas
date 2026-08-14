@@ -14,8 +14,11 @@
          person, and never shown to a screen reader either (aria-hidden +
          tabindex -1), so nobody legitimate can trip it by accident. --}}
     <div class="hp" aria-hidden="true">
-      <label for="company_website">Company website</label>
-      <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+      {{-- No label text: nobody sees this field, so an English word here would
+           be the only untranslated string on an otherwise Bengali page, and it
+           would be there for a bot's benefit rather than a reader's. --}}
+      <input type="text" id="company_website" name="company_website" tabindex="-1"
+             autocomplete="off" aria-hidden="true">
     </div>
 
     <label for="phone">{{ __('saas.apply.phone') }} *</label>
