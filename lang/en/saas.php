@@ -204,4 +204,5 @@ return [
     'bk.holds_saas_registry' => 'the list of who the tenants are',
     'bk.source' => 'Read from the dump files on disk by saas:stats, which runs hourly. Last collected: :when. A web request cannot list that directory at all, which is why a command does it.',
     'bk.never_lower' => 'never',
+    'home.cta_doc' => 'Read the full description',
 ];

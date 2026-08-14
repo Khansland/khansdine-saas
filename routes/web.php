@@ -28,6 +28,25 @@ Route::get('/lang/{locale}', function (string $locale) {
 })->name('lang.switch');
 
 /*
+ * THE PRESENTATION DOCUMENT.
+ *
+ * Bengali is the primary version and English is the one that gets forwarded
+ * upward, so there is a view per language rather than a wall of lang keys -
+ * this is prose, and prose written key by key reads like it. /system serves
+ * whichever the reader's locale asks for; /system/bn and /system/en are the
+ * fixed links, for when he wants to send one specific version to one person.
+ */
+Route::get('/system', function () {
+    return view('presentation.' . (app()->getLocale() === 'en' ? 'en' : 'bn'));
+})->name('system');
+
+Route::get('/system/{lang}', function (string $lang) {
+    abort_unless(in_array($lang, ['bn', 'en'], true), 404);
+
+    return view('presentation.' . $lang);
+})->name('system.lang');
+
+/*
  * THE PUBLIC SIDE. Indexed on purpose - see public/robots.txt.
  */
 Route::get('/', [PublicController::class, 'home'])->name('home');

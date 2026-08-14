@@ -7,6 +7,7 @@
   <p>
     <a class="btn" href="{{ route('apply') }}">{{ __('saas.home.cta_apply') }}</a>
     <a class="btn ghost" href="{{ config('subdomain.demo_url') }}">{{ __('saas.home.cta_demo') }}</a>
+    <a class="btn ghost" href="{{ route('system') }}">{{ __('saas.home.cta_doc') }}</a>
   </p>
   <p class="muted">{{ __('saas.home.demo_note') }}</p>
 
