@@ -16,7 +16,9 @@ a{color:var(--brand)}
 .wrap{max-width:920px;margin:0 auto;padding:0 1rem}
 header{background:#fff;border-bottom:1px solid var(--line)}
 header .wrap{display:flex;align-items:center;gap:1rem;height:60px}
-header .brand{font-weight:700;text-decoration:none;color:var(--ink)}
+header .brand{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;line-height:1.15}
+.brand-name{font-weight:700;font-size:1.02rem}
+.brand-product{font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.01em}
 header nav{margin-left:auto;display:flex;gap:.75rem;align-items:center;font-size:.9rem}
 .lang a{padding:.15rem .45rem;border-radius:4px;text-decoration:none;color:var(--muted);font-size:.8rem}
 .lang a.on{background:var(--ink);color:#fff}
@@ -50,11 +52,23 @@ pre{background:var(--ink);color:#e2e8f0;padding:.9rem;border-radius:8px;overflow
 .pill.contacted{background:#e0e7ff;color:#3730a3}.pill.approved{background:#dcfce7;color:#166534}
 .pill.rejected{background:#f1f5f9;color:#475569}.pill.provisioned{background:#ccfbf1;color:#115e59}
 .scroll{overflow-x:auto}
+/* The backup column. Four verdicts and a never-collected, each a different
+   colour, because the whole point is that one of them has to be noticed at a
+   glance on a night when nobody is looking for it. */
+.bk{display:inline-block;padding:.12rem .5rem;border-radius:4px;font-size:.75rem;font-weight:700}
+.bk-ok{background:#dcfce7;color:#166534}
+.bk-stale{background:#fef3c7;color:#92400e;border:1px solid #f59e0b}
+.bk-none{background:#fee2e2;color:#991b1b;border:1px solid #ef4444}
+.bk-unknown{background:#e2e8f0;color:#475569;border:1px dashed #94a3b8}
+.bk-detail{font-size:.74rem;color:var(--muted);margin-top:.15rem}
 </style>
 </head>
 <body>
 <header><div class="wrap">
-  <a class="brand" href="{{ route('home') }}">{{ config('subdomain.site_name') }}</a>
+  <a class="brand" href="{{ route('home') }}">
+    <span class="brand-name notranslate" translate="no">{{ __('saas.brand.name') }}</span>
+    <span class="brand-product">{{ __('saas.brand.product') }}</span>
+  </a>
   <nav>
     <a href="{{ route('apply') }}">{{ __('saas.nav.apply') }}</a>
     <a href="{{ config('subdomain.demo_url') }}">{{ __('saas.nav.demo') }}</a>
@@ -67,7 +81,9 @@ pre{background:var(--ink);color:#e2e8f0;padding:.9rem;border-radius:8px;overflow
 </div></header>
 <main><div class="wrap">@yield('body')</div></main>
 <footer><div class="wrap">
-  {{ config('subdomain.site_name') }} &middot; {{ config('subdomain.phone') }}
+  &copy; {{ date('Y') }}
+  <span class="notranslate" translate="no">{{ __('saas.brand.name') }}</span>
+  &middot; {{ __('saas.brand.product') }} &middot; {{ config('subdomain.phone') }}
   @auth('console') &middot; <a href="{{ route('console.tenants') }}">{{ __('saas.nav.console') }}</a>@endauth
 </div></footer>
 </body>

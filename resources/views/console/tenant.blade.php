@@ -23,12 +23,14 @@
         <tr><th>{{ __('saas.t.db_size') }}</th>
             <td>{{ $stat->db_bytes ? number_format($stat->db_bytes / 1048576, 1) . ' MB' : '-' }}</td></tr>
         <tr><th>{{ __('saas.t.last_backup') }}</th>
-            <td>{{ $stat->last_backup_at?->translatedFormat('d M Y H:i') ?: __('saas.t.none_seen') }}</td></tr>
+            <td>@include('console.partials.backup', ['stat' => $stat])
+                @if($stat->backup_file)<div class="muted" style="font-size:.78rem">{{ $stat->backup_file }}</div>@endif
+            </td></tr>
       </table>
       @if($stat->error)<div class="err">{{ $stat->error }}</div>@endif
       {{-- Said out loud, because these are not live. The console cannot open a
            tenant database and is not meant to be able to. --}}
-      <p class="muted">{{ __('saas.t.as_of', ['when' => $stat->collected_at?->diffForHumans() ?: '-']) }}</p>
+      <p class="muted">{{ __('saas.t.as_of', ['when' => $stat->collected_at_local?->translatedFormat('d M H:i') ?: '-']) }}</p>
     @else
       <p class="muted">{{ __('saas.t.no_stats') }}</p>
     @endif

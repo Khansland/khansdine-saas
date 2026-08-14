@@ -1,7 +1,10 @@
 <?php
 
 return [
-    'meta.title' => "Khan's Dine — farm software for fish farms",
+    'brand.name' => 'Khan\'s Systems',
+    'brand.product' => 'Fish Farm Management',
+
+    'meta.title' => "Khan\'s Systems — farm software for fish farms",
     'meta.description' => 'Pond-by-pond record keeping for fish farms: feed, growth, health, '
         . 'staff and money in one place, in Bengali, English or Russian.',
 
@@ -66,13 +69,13 @@ return [
     'apply.bundles' => 'What interests you',
     'apply.note' => 'Anything else',
     'apply.submit' => 'Send',
-    'apply.privacy' => 'Your details go to Khan\'s Dine and nowhere else. No automatic email is '
+    'apply.privacy' => 'Your details go to Khan\'s Systems and nowhere else. No automatic email is '
         . 'sent to you — a person answers.',
     'apply.too_many' => 'That is enough applications for now. Please try again in :minutes minutes, '
         . 'or call us.',
 
     'thanks.title' => 'Thank you — it has arrived',
-    'thanks.body' => 'Your application is with Khan\'s Dine. Habib answers these himself, so it may '
+    'thanks.body' => 'Your application is with Khan\'s Systems. Habib answers these himself, so it may '
         . 'take a day or two.',
     'thanks.no_email' => 'You will not get an automatic email. The reply, when it comes, is from a person.',
     'thanks.meanwhile' => 'Meanwhile, try the demo',
@@ -83,7 +86,7 @@ return [
     'auth.deactivated' => 'That account is no longer active.',
 
     'console.title' => 'Console',
-    'console.login_lede' => 'This login is separate from every other Khan\'s Dine account.',
+    'console.login_lede' => 'This login is separate from every other Khan\'s Systems account.',
     'console.email' => 'Email',
     'console.password' => 'Password',
     'console.remember' => 'Stay signed in',
@@ -181,4 +184,24 @@ return [
     'audit.action' => 'What',
     'audit.subject' => 'On',
     'audit.detail' => 'Detail',
+    'bk.ok' => 'BACKED UP',
+    'bk.stale' => 'STALE (over :hh)',
+    'bk.none' => 'NO BACKUP FOUND',
+    'bk.cannot' => 'CANNOT TELL',
+    'bk.never' => 'NEVER COLLECTED',
+    'bk.age' => ':h h old',
+    'bk.none_why' => 'the backup directory was readable and holds no dump for this database',
+    'bk.cannot_why' => 'no backup directory could be listed from here',
+    'bk.legend' => 'What this column is saying',
+    'bk.legend_ok' => 'a dump exists on disk and it is recent. The date, the size and its age are the evidence.',
+    'bk.legend_stale' => 'a dump exists but it is older than :hh. A backup from last week is not a backup.',
+    'bk.legend_none' => 'we could look, and there is nothing. This is the state that should shout.',
+    'bk.legend_cannot' => 'nobody could look. Saying "none" here would be a lie.',
+    'bk.legend_never' => 'the collector has not run yet, so nothing has been asked. Run saas:stats.',
+    'bk.system_title' => 'The console\'s own databases',
+    'bk.holds' => 'What it holds',
+    'bk.holds_saas_console' => 'every customer application and the whole audit trail',
+    'bk.holds_saas_registry' => 'the list of who the tenants are',
+    'bk.source' => 'Read from the dump files on disk by saas:stats, which runs hourly. Last collected: :when. A web request cannot list that directory at all, which is why a command does it.',
+    'bk.never_lower' => 'never',
 ];

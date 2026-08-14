@@ -15,12 +15,20 @@ class TenantController extends Controller
     {
         $healthy = Registry::healthy();
         $tenants = $healthy ? Registry::tenants() : collect();
-        $stats = TenantStat::get()->keyBy('subdomain');
+        $all = TenantStat::get();
 
         return view('console.tenants', [
             'healthy' => $healthy,
             'tenants' => $tenants,
-            'stats' => $stats,
+            'stats' => $all->where('kind', 'tenant')->keyBy('subdomain'),
+            // saas_console and saas_registry: not tenants, and the only copy of
+            // every application and the audit trail.
+            'system' => $all->where('kind', 'system')->sortBy('subdomain')->values(),
+            // Said out loud on the page: these are collected, not live, and the
+            // whole column is worthless if nobody knows when it last looked.
+            'collectedAt' => $all->max('collected_at')
+                ?->timezone(config('saas.display_timezone', 'UTC'))
+                ->translatedFormat('d M Y H:i'),
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\TenantStat;
+use App\Services\BackupEvidence;
 use App\Services\Registry;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +59,8 @@ class StatsCommand extends Command
 
         $done = 0;
         foreach (Registry::tenants() as $t) {
-            $row = ['subdomain' => $t->subdomain, 'database_name' => $t->database_name,
+            $row = ['kind' => 'tenant', 'subdomain' => $t->subdomain,
+                    'database_name' => $t->database_name,
                     'collected_at' => now(), 'error' => null,
                     'tanks' => null, 'batches' => null, 'users' => null, 'db_bytes' => null];
             try {
@@ -76,11 +78,15 @@ class StatsCommand extends Command
                         ? (int) DB::connection('tenant_probe')->scalar("SELECT COUNT(*) FROM `{$db}`.`{$table}`")
                         : null;
                 }
-                $row['last_backup_at'] = $this->lastBackup($db);
+                $row = array_merge($row, self::backupColumns($db));
             } catch (\Throwable $e) {
                 // A tenant that has not been created yet is not an error worth
-                // failing the whole run for - it is a fact worth showing.
+                // failing the whole run for - it is a fact worth showing. Its
+                // backup evidence is still collected: "the database does not
+                // exist" and "the database is not backed up" are two different
+                // sentences and the screen says both.
                 $row['error'] = substr($e->getMessage(), 0, 180);
+                $row = array_merge($row, self::backupColumns($t->database_name));
             }
 
             TenantStat::updateOrCreate(['subdomain' => $t->subdomain], $row);
@@ -88,24 +94,52 @@ class StatsCommand extends Command
             $this->line(sprintf('  %-16s %s', $t->subdomain, $row['error'] ? 'ERROR' : 'ok'));
         }
 
-        $this->info("refreshed: {$done}");
+        $this->systemDatabases();
+
+        $this->info("refreshed: {$done} tenant(s) + 2 system databases");
 
         return self::SUCCESS;
     }
 
-    /** The newest nightly dump for this database, if the backup can be seen from here. */
-    private function lastBackup(string $db): ?string
+    /** The backup columns for one database, from the evidence on disk. */
+    private static function backupColumns(string $database): array
     {
-        foreach (['/home/khansland/backups', '/home/khansland/snapshots'] as $dir) {
-            if (! is_dir($dir)) {
-                continue;
-            }
-            $files = @glob($dir . '/' . $db . '_*.sql.gz') ?: [];
-            if ($files) {
-                return date('Y-m-d H:i:s', max(array_map('filemtime', $files)));
-            }
-        }
+        $e = BackupEvidence::for($database);
 
-        return null;
+        return [
+            'last_backup_at' => $e['at'],
+            'backup_state' => $e['state'],
+            'backup_file' => $e['file'],
+            'backup_bytes' => $e['bytes'],
+            'backup_count' => $e['count'],
+            'backup_note' => $e['note'],
+        ];
+    }
+
+    /**
+     * The two databases that are not tenants and still matter.
+     *
+     * saas_console holds every customer application and the whole audit trail;
+     * saas_registry is the list of who the tenants are. Neither is covered by
+     * the tenant loop above, and both are named in backup.sh's must-be-dumped
+     * list - so the console watches them the same way it watches a customer.
+     */
+    private function systemDatabases(): void
+    {
+        foreach ([
+            'saas_console' => config('database.connections.console.database', 'saas_console'),
+            'saas_registry' => config('database.connections.registry.database', 'saas_registry'),
+        ] as $label => $database) {
+            TenantStat::updateOrCreate(
+                ['subdomain' => $label],
+                array_merge([
+                    'kind' => 'system',
+                    'database_name' => $database,
+                    'collected_at' => now(),
+                    'error' => null,
+                ], self::backupColumns($database))
+            );
+            $this->line(sprintf('  %-16s %s', $label, 'system database'));
+        }
     }
 }

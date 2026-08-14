@@ -94,7 +94,13 @@ class PublicController extends Controller
             return;
         }
 
+        // The mail carries the same identity as the page the applicant filled in.
+        $brand = __('saas.brand.name') . ' - ' . __('saas.brand.product', [], 'en');
+
         $lines = [
+            $brand,
+            str_repeat('-', strlen($brand)),
+            '',
             'A new application came in at ' . config('app.url') . '/apply',
             '',
             'Farm:     ' . $a->farm_name,
@@ -114,7 +120,8 @@ class PublicController extends Controller
 
         try {
             Mail::raw(implode("\n", $lines), function ($m) use ($to, $a) {
-                $m->to($to)->subject('New farm application: ' . $a->farm_name);
+                $m->to($to)->subject(__('saas.brand.name', [], 'en')
+                    . ' - new farm application: ' . $a->farm_name);
             });
         } catch (\Throwable $e) {
             // A mail failure must not lose the application - it is already
