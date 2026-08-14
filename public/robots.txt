@@ -1,0 +1,8 @@
+# C.4: this site SHOULD be found. It is the front door of the product.
+# The DEMO is the opposite and carries Disallow plus a noindex header of its own;
+# nothing here does, and nothing here should.
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://saas.khansdine.com.bd/sitemap.xml

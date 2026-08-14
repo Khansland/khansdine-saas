@@ -1,0 +1,31 @@
+{
+    "name": "khansdine/fishr-site",
+    "type": "project",
+    "description": "Khans Fisheries \u2014 Fresh Water Aquaculture subdomain site",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "laravel/framework": "^13.0",
+        "khansdine/subdomain-shared": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/home/khansdine/packages/khansdine/subdomain-shared"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+                "laravel/tinker"
+            ]
+        }
+    }
+}

@@ -1,0 +1,184 @@
+<?php
+
+return [
+    'meta.title' => "Khan's Dine — farm software for fish farms",
+    'meta.description' => 'Pond-by-pond record keeping for fish farms: feed, growth, health, '
+        . 'staff and money in one place, in Bengali, English or Russian.',
+
+    'nav.apply' => 'Apply',
+    'nav.demo' => 'Live demo',
+    'nav.console' => 'Console',
+
+    'home.headline' => 'Run the farm from your phone, pond by pond',
+    'home.lede' => 'Every feeding, every sampling, every death and every taka, recorded where it '
+        . 'happened and added up for you. Built on a working farm in Rajshahi, not in an office.',
+    'home.cta_apply' => 'Apply for an account',
+    'home.cta_demo' => 'Open the live demo',
+    'home.demo_note' => 'The demo is a real farm\'s worth of data. Change anything you like — it '
+        . 'resets itself every half hour.',
+    'home.what_it_does' => 'What it does',
+    'home.does.ponds.title' => 'Every pond and tank',
+    'home.does.ponds.body' => 'Stocking, transfers, samplings and harvest per container, with the '
+        . 'weight curve you would otherwise keep in your head.',
+    'home.does.feed.title' => 'Feed that adds up',
+    'home.does.feed.body' => 'What went in, what it cost, what it should have been, and the FCR '
+        . 'per batch without a calculator.',
+    'home.does.health.title' => 'Health and mortality',
+    'home.does.health.body' => 'Disease, treatment and death recorded against the pond, so a bad '
+        . 'season is a record and not a memory.',
+    'home.does.money.title' => 'The books',
+    'home.does.money.body' => 'Purchases, sales, wages, leases and depreciation posted to a real '
+        . 'ledger, so you know which pond made money.',
+
+    'home.bundles' => 'What you can start with',
+    'home.bands' => 'Bundles are sized by how many ponds and tanks you keep. Tell us how many you '
+        . 'have and we will tell you which band you are in.',
+    'home.how' => 'How it works',
+    'home.step.apply' => 'Send the form below — a phone number is enough to start.',
+    'home.step.talk' => 'Habib calls you and you talk about your farm.',
+    'home.step.setup' => 'Your farm gets its own address and its own database. Nothing is shared '
+        . 'with another farm.',
+    'home.step.use' => 'You start recording. Your staff can use it in Bengali on a cheap phone.',
+
+    'bundle.price' => 'Contact us for pricing',
+    'bundle.core.title' => 'Core',
+    'bundle.core.body' => 'Ponds and tanks, batches, feeding, samplings, mortality, water quality, '
+        . 'stock and the ledger.',
+    'bundle.people.title' => '+ People',
+    'bundle.people.body' => 'Staff, attendance, leave, wages and who did what on which pond.',
+    'bundle.aimama.title' => '+ AiMama',
+    'bundle.aimama.body' => 'Ask questions about your own farm in Bengali and get an answer from '
+        . 'your own numbers.',
+    'bundle.sales.title' => '+ Sales',
+    'bundle.sales.body' => 'Customers, price lists, invoices and a public page for your fish.',
+
+    'apply.title' => 'Apply for an account',
+    'apply.lede' => 'Fill in what you know. A phone number and a farm name are enough — Habib will '
+        . 'call you about the rest.',
+    'apply.phone' => 'Phone',
+    'apply.phone_note' => 'The number you actually answer. This is how you will be contacted.',
+    'apply.farm_name' => 'Farm name',
+    'apply.owner_name' => 'Your name',
+    'apply.district' => 'District',
+    'apply.pond_count' => 'How many ponds and tanks',
+    'apply.species' => 'What you farm',
+    'apply.species_ph' => 'Rui, Tilapia, Pangas ...',
+    'apply.bundles' => 'What interests you',
+    'apply.note' => 'Anything else',
+    'apply.submit' => 'Send',
+    'apply.privacy' => 'Your details go to Khan\'s Dine and nowhere else. No automatic email is '
+        . 'sent to you — a person answers.',
+    'apply.too_many' => 'That is enough applications for now. Please try again in :minutes minutes, '
+        . 'or call us.',
+
+    'thanks.title' => 'Thank you — it has arrived',
+    'thanks.body' => 'Your application is with Khan\'s Dine. Habib answers these himself, so it may '
+        . 'take a day or two.',
+    'thanks.no_email' => 'You will not get an automatic email. The reply, when it comes, is from a person.',
+    'thanks.meanwhile' => 'Meanwhile, try the demo',
+    'thanks.back' => 'Back to the front page',
+
+    'auth.failed' => 'That email and password do not match.',
+    'auth.throttled' => 'Too many attempts. Try again in :seconds seconds.',
+    'auth.deactivated' => 'That account is no longer active.',
+
+    'console.title' => 'Console',
+    'console.login_lede' => 'This login is separate from every other Khan\'s Dine account.',
+    'console.email' => 'Email',
+    'console.password' => 'Password',
+    'console.remember' => 'Stay signed in',
+    'console.sign_in' => 'Sign in',
+    'console.logout' => 'Sign out',
+    'console.tenants' => 'Tenants',
+    'console.applications' => 'Applications',
+    'console.audit' => 'Audit',
+    'console.saved' => 'Saved.',
+    'console.registry_down' => 'The registry cannot be read. Nothing is listed rather than a wrong list.',
+    'console.no_tenants' => 'No tenants yet.',
+    'console.read_only_note' => 'This list is read through a SELECT-only database grant. Changing a '
+        . 'tenant is a command, never a click.',
+
+    't.subdomain' => 'Subdomain',
+    't.database' => 'Database',
+    't.status' => 'Status',
+    't.bundle' => 'Bundle',
+    't.created' => 'Created',
+    't.last_backup' => 'Last backup seen',
+    't.none_seen' => 'none seen',
+    't.notes' => 'Registry notes',
+    't.open_site' => 'Open their site',
+    't.holds' => 'What their install holds',
+    't.tanks' => 'Ponds and tanks',
+    't.batches' => 'Batches',
+    't.users' => 'Users',
+    't.db_size' => 'Database size',
+    't.as_of' => 'Collected :when by saas:stats.',
+    't.no_stats' => 'Nothing collected yet. Run saas:stats.',
+    't.tenant_data_note' => 'Counts and sizes only. A customer\'s own records are theirs and are not '
+        . 'read here.',
+    't.actions' => 'Lifecycle',
+    't.actions_note' => 'Each of these shows the command to run. The console does not run it — the '
+        . 'credentials that can create and drop a database are not available to a web request.',
+    't.recent' => 'Recent events',
+    't.no_events' => 'Nothing yet.',
+
+    'verb.provision' => 'Provision',
+    'verb.suspend' => 'Suspend',
+    'verb.resume' => 'Resume',
+    'verb.export' => 'Export',
+    'verb.delete' => 'Delete',
+
+    'cmd.lede' => 'Copy this and run it in a terminal.',
+    'cmd.why' => 'It is shown rather than run because the account that can create and drop customer '
+        . 'databases is read from a file outside every deployment, and only a console process may '
+        . 'ask for it.',
+    'cmd.destructive' => 'This one destroys data.',
+    'cmd.guards' => 'What the command will insist on',
+    'cmd.guards_note' => 'These are enforced by the command itself. Nothing here can waive them.',
+    'cmd.back' => 'Back',
+
+    'a.all' => 'All',
+    'a.none' => 'Nothing here.',
+    'a.when' => 'When',
+    'a.farm' => 'Farm',
+    'a.owner' => 'Owner',
+    'a.phone' => 'Phone',
+    'a.district' => 'District',
+    'a.ponds' => 'Ponds',
+    'a.species' => 'Species',
+    'a.bundles' => 'Interested in',
+    'a.language' => 'Language',
+    'a.note' => 'Their note',
+    'a.state' => 'Status',
+    'a.decide' => 'Decide',
+    'a.admin_note' => 'Your note',
+    'a.subdomain' => 'Subdomain to give them',
+    'a.subdomain_note' => 'A guess from the farm name. Change it — the provisioning command refuses '
+        . 'a name that is taken or reserved.',
+    'a.save' => 'Save',
+    'a.approve_note' => 'Setting this to Approved opens the provisioning form with these details '
+        . 'filled in. It does not provision anything.',
+    'a.status.new' => 'New',
+    'a.status.contacted' => 'Contacted',
+    'a.status.approved' => 'Approved',
+    'a.status.rejected' => 'Rejected',
+    'a.status.provisioned' => 'Provisioned',
+
+    'p.title' => 'Provisioning',
+    'p.lede' => 'Filled in from :farm\'s application. Change anything, then build the command.',
+    'p.subdomain' => 'Subdomain',
+    'p.subdomain_note' => 'One label, lowercase. Their address becomes <subdomain>.khansdine.com.bd.',
+    'p.business_name' => 'Farm name',
+    'p.admin_email' => 'First admin email',
+    'p.admin_email_note' => 'Leave empty and the command defaults to admin@<subdomain>.khansdine.com.bd.',
+    'p.build' => 'Build the command',
+    'p.run_this' => 'Run this',
+    'p.run_note' => 'Nothing has been created. This is the command that would create it.',
+
+    'audit.lede' => 'Who did what, and when. Written for every action the console takes, including '
+        . 'the ones that only showed a command.',
+    'audit.actor' => 'Who',
+    'audit.action' => 'What',
+    'audit.subject' => 'On',
+    'audit.detail' => 'Detail',
+];
