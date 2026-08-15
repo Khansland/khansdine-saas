@@ -210,4 +210,10 @@ return [
     'bk.source' => 'Read from the dump files on disk by saas:stats, which runs hourly. Last collected: :when. A web request cannot list that directory at all, which is why a command does it.',
     'bk.never_lower' => 'never',
     'home.cta_doc' => 'Read the full description',
+
+    'shot.container_list' => 'The container list: every pond and tank with its batch, species and current count',
+    'shot.container_cost' => 'One container\'s page: average weight, biomass and the batch cost per kilo',
+    'shot.feed_entry' => 'The feed entry: the day\'s suggested ration, editable before it is saved',
+    'shot.tenure' => 'The tenure report: one pond\'s costs, sales and standing stock over its whole stay',
+    'shot.attendance' => 'Attendance: each worker\'s month day by day, with the wage earned so far',
 ];

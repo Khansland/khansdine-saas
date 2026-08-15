@@ -19,6 +19,11 @@
 বাংলাদেশে, বাংলা ভাষায়, বাংলাদেশি খামারের সমস্যা মাথায় রেখে।
 </p>
 
+<figure class="shotfig">
+  <img src="/img/system/container-list.png" alt="{{ __('saas.shot.container_list', [], 'bn') }}" width="1366" height="768">
+  <figcaption>{{ __('saas.shot.container_list', [], 'bn') }}</figcaption>
+</figure>
+
 <h2>যা এই সিস্টেম একটি সত্যিকারের খামারে ধরে ফেলেছে</h2>
 
 <p>
@@ -118,12 +123,22 @@
 খরচ পড়েছে এত টাকা।"</strong> — আর সেই সংখ্যার পেছনের প্রতিটি লাইন ক্লিক করে দেখা যায়।
 </p>
 
+<figure class="shotfig">
+  <img src="/img/system/container-cost.png" alt="{{ __('saas.shot.container_cost', [], 'bn') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.container_cost', [], 'bn') }}</figcaption>
+</figure>
+
 <h3>খালি পুকুরও টাকা খায়</h3>
 <p>
 একটি পুকুর যখন খালি পড়ে থাকে, ইজারা চলতে থাকে, অবচয় চলতে থাকে। সিস্টেমের
 <strong>টেনিওর রিপোর্ট</strong> দেখায় ওই ধারকটি তার পুরো জীবদ্দশায় কত দিয়েছে আর কত নিয়েছে —
 তাই "এই পুকুরটা কি রাখা উচিত?" প্রশ্নের উত্তর আবেগ নয়, সংখ্যা দিয়ে আসে।
 </p>
+
+<figure class="shotfig">
+  <img src="/img/system/tenure-report.png" alt="{{ __('saas.shot.tenure', [], 'bn') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.tenure', [], 'bn') }}</figcaption>
+</figure>
 
 <h2>দৈনন্দিন কাজ — যেভাবে কর্মী সত্যিই করবেন</h2>
 
@@ -149,6 +164,11 @@
   <li>বিক্রি ও ক্রয় — যা সরাসরি খতিয়ানে ওঠে</li>
 </ul>
 
+<figure class="shotfig">
+  <img src="/img/system/feed-entry.png" alt="{{ __('saas.shot.feed_entry', [], 'bn') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.feed_entry', [], 'bn') }}</figcaption>
+</figure>
+
 <h2>কর্মী ও প্রশাসন</h2>
 <ul>
   <li>হাজিরা, ছুটি, মজুরি — কে কবে ছিল, কে কোন পুকুরে কাজ করেছে</li>
@@ -156,6 +176,11 @@
   <li>দৈনিক কাজের তালিকা — কে কী করবে, আর কী বাদ পড়েছে</li>
   <li>ভূমিকা অনুযায়ী অনুমতি — কর্মী যা দেখার দরকার শুধু তাই দেখেন</li>
 </ul>
+
+<figure class="shotfig">
+  <img src="/img/system/attendance.png" alt="{{ __('saas.shot.attendance', [], 'bn') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.attendance', [], 'bn') }}</figcaption>
+</figure>
 
 <h2>আইমামা — খামারের নিজের সংখ্যা থেকে বাংলায় উত্তর</h2>
 <p>

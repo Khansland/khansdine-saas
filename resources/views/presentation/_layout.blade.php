@@ -40,12 +40,17 @@ th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.
 .lang a.on{background:var(--ink);color:#fff}
 .shot{border:1px dashed #94a3b8;background:#f8fafc;color:var(--muted);border-radius:8px;
   padding:1.4rem;text-align:center;font-size:.85rem;margin:.9rem 0}
+.shotfig{margin:1.1rem 0}
+.shotfig img{display:block;width:100%;max-width:100%;height:auto;border:1px solid var(--line);border-radius:8px}
+.shotfig figcaption{color:var(--muted);font-size:.8rem;margin-top:.35rem}
 @media print{
   body{background:#fff;font-size:11.5pt}
   .sheet{max-width:none;padding:0}
   .lang,.noprint{display:none}
   h2{break-after:avoid}
   .proof,.callout,.warnbox,table{break-inside:avoid}
+  .shotfig{break-inside:avoid}
+  .shotfig img{width:auto;max-width:100%;max-height:8.5cm;margin:0 auto;border-radius:0}
   a{color:inherit;text-decoration:none}
   .cta{background:#fff;color:var(--ink);border:2px solid var(--ink)}
   .cta a{color:var(--ink)}

@@ -20,6 +20,11 @@ This is not a foreign product with Bengali pasted over it. It was built inside a
 actually does — in Bangladesh, in Bengali, for the problems Bangladeshi farms have.
 </p>
 
+<figure class="shotfig">
+  <img src="/img/system/container-list.png" alt="{{ __('saas.shot.container_list', [], 'en') }}" width="1366" height="768">
+  <figcaption>{{ __('saas.shot.container_list', [], 'en') }}</figcaption>
+</figure>
+
 <h2>What this system found on a real, working farm</h2>
 
 <p>
@@ -123,12 +128,22 @@ The result is an answer in one sentence: <strong>"Tilapia in pond 3 costs this m
 per kilo today"</strong> — with every line behind that number available to open.
 </p>
 
+<figure class="shotfig">
+  <img src="/img/system/container-cost.png" alt="{{ __('saas.shot.container_cost', [], 'en') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.container_cost', [], 'en') }}</figcaption>
+</figure>
+
 <h3>An empty pond still costs money</h3>
 <p>
 While a pond sits empty the lease runs and the depreciation runs. The
 <strong>tenure report</strong> shows what a container has cost and returned across its
 whole life, so "should we keep this pond?" is answered with a number instead of a feeling.
 </p>
+
+<figure class="shotfig">
+  <img src="/img/system/tenure-report.png" alt="{{ __('saas.shot.tenure', [], 'en') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.tenure', [], 'en') }}</figcaption>
+</figure>
 
 <h2>The daily work — done the way a worker will actually do it</h2>
 
@@ -155,6 +170,11 @@ in Bengali:
   <li>Sales and purchases — posted straight into the ledger</li>
 </ul>
 
+<figure class="shotfig">
+  <img src="/img/system/feed-entry.png" alt="{{ __('saas.shot.feed_entry', [], 'en') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.feed_entry', [], 'en') }}</figcaption>
+</figure>
+
 <h2>People and administration</h2>
 <ul>
   <li>Attendance, leave and wages — who was here, and who worked which pond</li>
@@ -162,6 +182,11 @@ in Bengali:
   <li>Daily task lists — who does what, and what was missed</li>
   <li>Permissions by role — a worker sees only what a worker needs</li>
 </ul>
+
+<figure class="shotfig">
+  <img src="/img/system/attendance.png" alt="{{ __('saas.shot.attendance', [], 'en') }}" width="1366" height="768" loading="lazy">
+  <figcaption>{{ __('saas.shot.attendance', [], 'en') }}</figcaption>
+</figure>
 
 <h2>AiMama — answers in Bengali, from the farm's own numbers</h2>
 <p>
