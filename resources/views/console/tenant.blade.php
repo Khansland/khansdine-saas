@@ -46,6 +46,36 @@
     <p class="muted">{{ __('saas.t.actions_note') }}</p>
   </div>
 
+  {{-- ★ SCHEDULED JOBS. Eight of them died nightly for every tenant and the
+       only trace was a stack trace in a log file. This block exists so that
+       cannot happen quietly again: NEVER RUN, ran-and-did-nothing, skipped and
+       failed are four different states and they are shown as four. --}}
+  <h2>{{ __('saas.t.scheduled') }}</h2>
+  <div class="card scroll">
+    <table>
+      @forelse($scheduledRuns as $r)
+        <tr>
+          <td class="muted" style="white-space:nowrap">
+            {{ $r['ran_at'] ? \Carbon\Carbon::parse($r['ran_at'])->translatedFormat('d M H:i') : '—' }}
+          </td>
+          <td>{{ $r['job'] }}</td>
+          <td>
+            @if($r['outcome'] === 'ok')
+              <span style="color:#15803d">{{ __('saas.t.run_ok') }}</span>
+            @elseif($r['outcome'] === 'skipped')
+              <span class="muted">{{ __('saas.t.run_skipped') }}</span>
+            @else
+              <span style="color:#b91c1c">{{ __('saas.t.run_failed') }}</span>
+            @endif
+          </td>
+          <td class="muted">{{ $r['reason'] ?? \Illuminate\Support\Str::limit(str_replace("\n", ' · ', (string) $r['output']), 90) }}</td>
+        </tr>
+      @empty
+        <tr><td class="muted" colspan="4">{{ __('saas.t.no_runs') }}</td></tr>
+      @endforelse
+    </table>
+  </div>
+
   <h2>{{ __('saas.t.recent') }}</h2>
   <div class="card scroll">
     <table>

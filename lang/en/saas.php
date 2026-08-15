@@ -122,6 +122,11 @@ return [
     't.actions' => 'Lifecycle',
     't.actions_note' => 'Each of these shows the command to run. The console does not run it — the '
         . 'credentials that can create and drop a database are not available to a web request.',
+    't.scheduled' => 'Scheduled jobs',
+    't.no_runs' => 'NEVER RUN — no scheduled job has recorded a run for this tenant.',
+    't.run_ok' => 'ok',
+    't.run_skipped' => 'skipped',
+    't.run_failed' => 'FAILED',
     't.recent' => 'Recent events',
     't.no_events' => 'Nothing yet.',
 
