@@ -67,6 +67,50 @@
     </table>
   </div>
 
+  {{-- ★ IS ANYTHING SERVING? Report site-uptime-watch, 2026-08-16. Seven
+       customer-facing storefronts were dead for two days and nothing on this
+       box was watching an HTTP status. This block is the smallest thing that
+       would have caught it on the 14th. --}}
+  <h2>{{ __('saas.up.title') }}</h2>
+  @php($sc = $siteCheck ?? null)
+  @if($sc && ($sc['could_not_check'] ?? false))
+    <div class="card"><span class="bk bk-unknown">{{ __('saas.up.cannot') }}</span>
+      <div class="bk-detail">{{ __('saas.up.all_down') }}</div></div>
+  @endif
+  <div class="card scroll">
+    <table>
+      <thead><tr><th>{{ __('saas.up.site') }}</th><th>{{ __('saas.up.what') }}</th>
+        <th>{{ __('saas.up.state') }}</th></tr></thead>
+      <tbody>
+      @forelse(($sc['sites'] ?? []) as $site)
+        <tr>
+          <td><strong>{{ $site['key'] }}</strong><div class="bk-detail">{{ $site['url'] }}</div></td>
+          <td class="muted">{{ $site['note'] }}</td>
+          <td>@include('console.partials.site', ['site' => $site])</td>
+        </tr>
+      @empty
+        <tr><td colspan="3">@include('console.partials.site', ['site' => null])</td></tr>
+      @endforelse
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <strong>{{ __('saas.up.legend') }}</strong>
+    <ul class="muted" style="margin:.4rem 0 0;padding-left:1.1rem">
+      <li><span class="bk bk-ok">{{ __('saas.up.up') }}</span> — {{ __('saas.up.legend_up') }}</li>
+      <li><span class="bk bk-none">{{ __('saas.up.down') }}</span> — {{ __('saas.up.legend_down') }}</li>
+      <li><span class="bk bk-unknown">{{ __('saas.up.cannot') }}</span> — {{ __('saas.up.legend_cannot') }}</li>
+      <li><span class="bk bk-unknown">{{ __('saas.up.never') }}</span> — {{ __('saas.up.legend_never') }}</li>
+    </ul>
+  </div>
+  <p class="muted">{{ __('saas.up.source', ['when' => isset($sc['checked_at'])
+      ? \Illuminate\Support\Carbon::parse($sc['checked_at'])
+          ->timezone(config('saas.display_timezone', 'UTC'))->translatedFormat('d M Y H:i')
+      : __('saas.up.never_lower')]) }}</p>
+  {{-- C.3: the honest limit, on the screen, the way the backup column says a
+       present dump may still be corrupt. --}}
+  <p class="muted">{{ __('saas.up.limit') }}</p>
+
   <p class="muted">{{ __('saas.console.read_only_note') }}</p>
   <p class="muted">{{ __('saas.bk.source', ['when' => $collectedAt ?: __('saas.bk.never_lower')]) }}</p>
 @endsection

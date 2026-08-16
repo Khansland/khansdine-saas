@@ -13,4 +13,9 @@ return [
     // box's own time, because the person reading them is standing next to the
     // box and will compare what he sees against a file listing.
     'display_timezone' => env('SAAS_DISPLAY_TZ', 'Asia/Dhaka'),
+
+    // Where the scheduled commands leave their outcomes for this console to
+    // read: aqua:each-tenant writes tenant-runs.json here, saas:site-check
+    // writes site-checks.json. One directory, one mechanism.
+    'run_state_dir' => env('SAAS_RUN_STATE_DIR', dirname(base_path()) . '/saas-runs'),
 ];

@@ -29,6 +29,11 @@ class TenantController extends Controller
             'collectedAt' => $all->max('collected_at')
                 ?->timezone(config('saas.display_timezone', 'UTC'))
                 ->translatedFormat('d M Y H:i'),
+            // ★ IS ANYTHING SERVING? Read from the same directory, in the same
+            // read-only never-throwing way, as the per-tenant job outcomes
+            // below. A missing file is NEVER CHECKED, which the screen says in
+            // its own words rather than rendering as silence.
+            'siteCheck' => \App\Services\SiteStatus::read(),
         ]);
     }
 
