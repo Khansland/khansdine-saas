@@ -9,6 +9,20 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        // ★ THE DEAD-MAN'S SWITCH, REGISTERED OUTSIDE THE WEB GROUP.
+        //
+        // Not in routes/web.php, deliberately: that file carries the web
+        // middleware group, and StartSession with SESSION_DRIVER=database
+        // would make a health probe open MySQL — a check that depends on the
+        // thing it is checking. Here it has the throttle and nothing else.
+        //
+        // 30 requests a minute per IP is ten times what a one-minute monitor
+        // needs and small enough that the URL is not worth pointing a flood at.
+        then: function () {
+            \Illuminate\Support\Facades\Route::middleware('throttle:30,1')
+                ->get('/health/watchman', \App\Http\Controllers\WatchmanController::class)
+                ->name('health.watchman');
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // kd_locale is the shared package's language cookie and is written for

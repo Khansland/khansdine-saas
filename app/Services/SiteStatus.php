@@ -26,6 +26,25 @@ use Khansdine\SubdomainShared\Support\SiteVerdict;
  */
 class SiteStatus
 {
+    /**
+     * ★ THE HEARTBEAT, INSIDE THE DEPLOYMENT.
+     *
+     * The state file lives in the shared saas-runs directory, which a WEB
+     * request on this console cannot open at all: its php-fpm pool sets
+     * open_basedir to its own deployment, deliberately, and BackupEvidence
+     * already records that lesson. The dead-man's-switch endpoint is a web
+     * request, so it cannot read the state file — it reads this instead.
+     *
+     * One file, inside open_basedir, whose MTIME is the whole answer. It
+     * carries the timestamp as text as well, for a person looking at the disk,
+     * but the endpoint uses the mtime: no parsing, no timezone, no format to
+     * get wrong.
+     */
+    public static function heartbeatPath(): string
+    {
+        return storage_path('app/site-check-heartbeat');
+    }
+
     public static function path(): string
     {
         return rtrim((string) config('saas.run_state_dir', dirname(base_path()) . '/saas-runs'), '/')
@@ -53,6 +72,23 @@ class SiteStatus
                 } else {
                     $s['down_since'] = null;
                 }
+
+                // ★ THE TWO-IN-A-ROW COUNTER, kept where the history is.
+                //
+                // The alert condition Habib accepted is DOWN on BOTH the edge
+                // and the origin for TWO CONSECUTIVE checks. Only this writer
+                // sees the previous run, so only this writer can count. The
+                // sender reads the number and decides nothing about history.
+                //
+                // Counting the ALERT condition and not merely "edge is down"
+                // matters: a site failing at the edge for an hour and then
+                // failing at the origin once would otherwise page immediately,
+                // on a single observation of the thing we alert about.
+                $bothDown = $s['state'] === SiteVerdict::DOWN
+                    && (! isset($s['origin']) || $s['origin']['state'] === SiteVerdict::DOWN);
+                $s['alert_streak'] = $bothDown
+                    ? (int) ($was[$s['key']]['alert_streak'] ?? 0) + 1
+                    : 0;
             }
             unset($s);
 
@@ -63,6 +99,16 @@ class SiteStatus
             file_put_contents(self::path(),
                 json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             @chmod(self::path(), 0664);
+
+            // The heartbeat the public endpoint reads. Written last, so it is
+            // only touched by a run that actually completed and recorded.
+            try {
+                @file_put_contents(self::heartbeatPath(), $result['checked_at'] . "\n");
+                @chmod(self::heartbeatPath(), 0644);
+            } catch (\Throwable $e) {
+                // A heartbeat that cannot be written makes the switch report
+                // STALE, which is the correct failure direction.
+            }
 
             return null;
         } catch (\Throwable $e) {
