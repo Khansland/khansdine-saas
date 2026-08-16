@@ -29,3 +29,7 @@ Thumbs.db
 *.asc
 *.gpg
 *.key
+
+# CC reports are output, not source. The aquaculture repo already ignores
+# this path; the console did not, and a report rode into a commit.
+/storage/cc-reports
