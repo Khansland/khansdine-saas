@@ -18,8 +18,23 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         // 30 requests a minute per IP is ten times what a one-minute monitor
         // needs and small enough that the URL is not worth pointing a flood at.
+        //
+        // ★★ AND THE THROTTLE IS NOT THE FRAMEWORK'S, FOR EXACTLY THAT REASON.
+        // `throttle:30,1` resolves onto the DEFAULT cache store, which here is
+        // the database, so the middleware in front of the handler opened MySQL
+        // on every request to the one URL that must answer while MySQL is
+        // down. Measured on 2026-08-19 (report watch-the-watcher): ten
+        // requests, ten connections. ThrottleWithoutDatabase is the same
+        // throttle counting on the file store instead, and it is a class so
+        // that the change reaches THIS route and no other - the console login
+        // throttle shares the framework's limiter and is deliberately left on
+        // it. Re-measured on 2026-08-19 (report limiter-off-mysql): ten
+        // requests, ZERO connections, three bursts, against an idle control of
+        // zero - and the endpoint answers 200 with the database cache store
+        // pointed at an unreachable server. The reasoning is in the class.
         then: function () {
-            \Illuminate\Support\Facades\Route::middleware('throttle:30,1')
+            \Illuminate\Support\Facades\Route::middleware(
+                \App\Http\Middleware\ThrottleWithoutDatabase::class . ':30,1')
                 ->get('/health/watchman', \App\Http\Controllers\WatchmanController::class)
                 ->name('health.watchman');
         },

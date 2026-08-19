@@ -48,27 +48,40 @@ use Illuminate\Http\Response;
  * for. This endpoint adds those two numbers and compares them to the clock.
  * That is its entire arithmetic.
  *
- * ── IT MUST NOT DEPEND ON THE THING IT WATCHES ────────────────────────────
+ * ── ★ IT DOES NOT DEPEND ON THE THING IT WATCHES, AND THAT IS NOW MEASURED ─
  * This handler makes no database query, resolves no tenant and starts no
  * session — it is registered outside the web middleware group precisely so
  * that StartSession (SESSION_DRIVER=database here) cannot make a health probe
  * open MySQL. It stats two files. A missing or unreadable one is STALE, which
  * is the honest answer and not an exception.
  *
- * ⚠ BUT THE ROUTE IS NOT YET FREE OF MYSQL, AND SAYING SO HERE IS THE POINT.
- * This comment used to read "no database query" flatly. It was measured on
- * 2026-08-19 (report watch-the-watcher) and it was WRONG: CACHE_STORE is
- * database on this deployment, so the `throttle:30,1` middleware in front of
- * this handler takes a MySQL connection on EVERY request — ten requests, ten
- * connections, against none at all with the throttle lifted. The handler is
- * clean; the route is not.
+ * ⚠ AND THE CLAIM IS ABOUT THE WHOLE ROUTE, NOT ABOUT THESE LINES, BECAUSE
+ * THAT IS EXACTLY HOW IT WAS WRONG TWICE. It read "no database query" flatly
+ * in R-0149 and again here, argued from the handler both times, and the
+ * handler was never the problem: CACHE_STORE is database on this deployment,
+ * so `throttle:30,1` in FRONT of the handler took a MySQL connection on every
+ * request. Measured 2026-08-19 (report watch-the-watcher): ten requests, ten
+ * connections, three bursts, against an idle control of none.
  *
- * It was left in place rather than quietly rewritten, because the failure
- * direction is the safe one — no MySQL means non-200 means the monitor fires,
- * and MySQL being down is itself worth waking up for. What it costs is that a
- * database hiccup shows up as "something in the chain has stopped" when the
- * backups are fine. Moving this one limiter onto the file store is the fix,
- * and it is Habib's call, not a thing to change under a brief about backups.
+ * ★ FIXED THE SAME DAY (report limiter-off-mysql), and the sentence is only
+ * written here because it was re-measured after the fix rather than reasoned
+ * about. The route's throttle is now ThrottleWithoutDatabase, which counts on
+ * the FILE cache store, and the same measurement gives:
+ *
+ *   before   10 requests -> +10 MySQL connections, three bursts, idle +0
+ *   after    10 requests -> + 0 MySQL connections, three bursts, idle +0
+ *
+ * and the endpoint was requested with every one of this application's MySQL
+ * connections pointed at a closed port: an ordinary console page returned 500
+ * and this URL returned 200 OK. The same route put back on `throttle:30,1`
+ * under the same conditions returned 500 — which is the control that makes
+ * the 200 mean anything. The throttle itself is unchanged and was re-proved
+ * by requesting: 29 more requests inside a minute, then 429.
+ *
+ * What it still cannot survive is named rather than glossed: PHP-FPM being
+ * down, nginx being down, this box being unreachable, or the disk that holds
+ * the limiter's counter being full or read-only. Those take it to no answer
+ * at all — which a monitor reads as a failure, and that is the safe direction.
  */
 class WatchmanController extends Controller
 {

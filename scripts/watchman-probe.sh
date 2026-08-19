@@ -136,5 +136,46 @@ else
     echo "  FAIL  no rate-limit header: the throttle is gone"; FAIL=1
 fi
 
+# ── ★★ AND THE ONE THIS PROBE EXISTS FOR: NO MySQL ON THE ROUTE ─────────────
+# The switch answers when other things are broken, so it must not ask MySQL
+# anything. That was asserted twice from the handler and was false both times:
+# CACHE_STORE is database here, so `throttle:30,1` opened a connection on every
+# request. The handler was never the problem - the ROUTE was, and a property of
+# a route is a property of its whole middleware stack.
+#
+# So it is measured here, at the wire, and it is the check that would have
+# caught it: the server's global Connections counter across five requests. The
+# READER opens one connection itself each time it is called, which is why the
+# expected raw delta is 1 and not 0. Five requests, not ten, because this probe
+# must stay well inside the endpoint's own 30-a-minute limit.
+echo "  -- ★ the route asks MySQL nothing (R-0219) --"
+conns () {
+    php -r "
+        require 'vendor/autoload.php';
+        \$a = require 'bootstrap/app.php';
+        \$a->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        echo Illuminate\Support\Facades\DB::select(\"SHOW GLOBAL STATUS LIKE 'Connections'\")[0]->Value;
+    " 2>/dev/null
+}
+# ⚠ The counter is the SERVER's, and this MySQL serves the ledger and seven
+# other sites, so a busy second shows up here as connections this endpoint did
+# not open. The per-user counter in performance_schema would isolate it and
+# this app's database user is not granted it - widening that grant is not a
+# thing a probe gets to decide. So an idle window of the same length is
+# measured first and printed, and the assertion is deliberately coarse: FEWER
+# THAN ONE CONNECTION PER REQUEST. Before R-0219 it was exactly one per
+# request - five requests, five connections - so the threshold is pinned to
+# the size of the defect and not to zero, and background noise cannot fail it.
+I0=$(conns); sleep 2; I1=$(conns); NOISE=$(( I1 - I0 - 1 ))
+C0=$(conns)
+for _ in 1 2 3 4 5; do fetch; done
+C1=$(conns)
+DELTA=$(( C1 - C0 - 1 ))          # -1 for the reader's own second connection
+if [ "$DELTA" -lt 5 ]; then
+    echo "  ok    5 requests opened $DELTA MySQL connections (idle control $NOISE, threshold 5)"
+else
+    echo "  FAIL  5 requests opened $DELTA MySQL connections (idle control $NOISE) - one per request: the limiter is back on the database"; FAIL=1
+fi
+
 [ $FAIL -eq 0 ] && echo "watchman probe: PASS" || echo "watchman probe: FAIL"
 exit $FAIL
