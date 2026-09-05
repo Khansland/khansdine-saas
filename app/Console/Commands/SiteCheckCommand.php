@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\SiteCheck;
+use App\Services\SiteHistory;
 use App\Services\SiteStatus;
 use Illuminate\Console\Command;
 use Khansdine\SubdomainShared\Support\SiteVerdict;
@@ -43,6 +44,15 @@ class SiteCheckCommand extends Command
         if ($warning !== null) {
             // Recording must never be the thing that breaks the run.
             $this->warn($warning);
+        }
+
+        // ★ THE HISTORY. R-0431. site-checks.json is the LAST run only, so
+        // after a site recovers nothing on this box could say what it had been
+        // doing. One line per probe per tick, rotated daily, pruned to
+        // SiteHistory::RETENTION_DAYS. Also must never break the run.
+        $historyWarning = SiteHistory::append($result);
+        if ($historyWarning !== null) {
+            $this->warn($historyWarning);
         }
 
         // ★ THE COUNT SEES BOTH PROBES. R-0430.

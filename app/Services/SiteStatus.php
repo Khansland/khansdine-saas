@@ -66,7 +66,12 @@ class SiteStatus
             }
 
             foreach ($result['sites'] as &$s) {
-                if ($s['state'] === SiteVerdict::DOWN) {
+                // ★ down_since follows the SITE verdict, not the edge alone.
+                // R-0431: with the alert widened to either probe, an
+                // origin-only outage was reaching the alerter with a null
+                // down_since, so the message read "has not answered for" and
+                // then nothing at all.
+                if (SiteVerdict::siteState($s)['down']) {
                     // Already down? keep the moment it started. Newly down? now.
                     $s['down_since'] = $was[$s['key']]['down_since'] ?? $result['checked_at'];
                 } else {
@@ -75,18 +80,26 @@ class SiteStatus
 
                 // ★ THE TWO-IN-A-ROW COUNTER, kept where the history is.
                 //
-                // The alert condition Habib accepted is DOWN on BOTH the edge
-                // and the origin for TWO CONSECUTIVE checks. Only this writer
-                // sees the previous run, so only this writer can count. The
-                // sender reads the number and decides nothing about history.
+                // Only this writer sees the previous run, so only this writer
+                // can count. The sender reads the number and decides nothing
+                // about history.
                 //
-                // Counting the ALERT condition and not merely "edge is down"
-                // matters: a site failing at the edge for an hour and then
-                // failing at the origin once would otherwise page immediately,
-                // on a single observation of the thing we alert about.
-                $bothDown = $s['state'] === SiteVerdict::DOWN
-                    && (! isset($s['origin']) || $s['origin']['state'] === SiteVerdict::DOWN);
-                $s['alert_streak'] = $bothDown
+                // ★ EITHER PROBE DOWN IS AN ALERT. R-0431.
+                //
+                // This counted only the case where BOTH probes were down. The
+                // reasoning was that one of the two failing is "a network or
+                // an edge problem, not a dead site" - and that is exactly
+                // backwards for the half that matters. An ORIGIN that is dead
+                // while Cloudflare serves the page from its cache is the
+                // failure this instrument was built to catch, and under the
+                // old rule nobody would ever have been told: the edge keeps
+                // answering 200 until the cache expires, which can be long
+                // after the farm's books have stopped working.
+                //
+                // The two-consecutive-checks rule is untouched, and it is what
+                // keeps a deploy or a slow minute from paging anybody.
+                $siteDown = SiteVerdict::siteState($s)['down'];
+                $s['alert_streak'] = $siteDown
                     ? (int) ($was[$s['key']]['alert_streak'] ?? 0) + 1
                     : 0;
             }
