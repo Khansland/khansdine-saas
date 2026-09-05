@@ -48,7 +48,8 @@ class SiteCheck
 
             $edge = $this->probe($e['url'], null, $cfg);
             $verdict = SiteVerdict::judge($edge['status'], $edge['bytes'],
-                (int) $e['expect'], (int) $e['min_bytes'], $edge['error']);
+                (int) $e['expect'], (int) $e['min_bytes'], $edge['error'],
+                $edge['location'], $e['expect_location'] ?? null);
 
             $row = [
                 'key' => $e['key'],
@@ -61,15 +62,18 @@ class SiteCheck
                 'status' => $edge['status'],
                 'bytes' => $edge['bytes'],
                 'ms' => $edge['ms'],
+                'location' => $edge['location'],
             ];
 
             if (! empty($e['origin'])) {
                 $o = $this->probe($e['url'], (string) ($cfg['origin_ip'] ?? '127.0.0.1'), $cfg);
                 $ov = SiteVerdict::judge($o['status'], $o['bytes'],
-                    (int) $e['expect'], (int) $e['min_bytes'], $o['error']);
+                    (int) $e['expect'], (int) $e['min_bytes'], $o['error'],
+                    $o['location'], $e['expect_location'] ?? null);
                 $row['origin'] = [
                     'state' => $ov['state'], 'why' => $ov['why'],
                     'status' => $o['status'], 'bytes' => $o['bytes'], 'ms' => $o['ms'],
+                    'location' => $o['location'],
                 ];
             }
 
@@ -88,7 +92,7 @@ class SiteCheck
      * One request. Never throws: a probe that dies is a probe that reported
      * nothing, which is a state the caller knows how to render.
      *
-     * @return array{status:?int, bytes:?int, ms:?int, error:?string}
+     * @return array{status:?int, bytes:?int, ms:?int, error:?string, location:?string}
      */
     private function probe(string $url, ?string $resolveTo, array $cfg): array
     {
@@ -119,20 +123,24 @@ class SiteCheck
             $body = curl_exec($ch);
             $ms = (int) round((microtime(true) - $started) * 1000);
             $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+            // Where a 3xx points. Redirects are still NOT followed: the
+            // destination is read off this answer, never walked to.
+            $location = (string) curl_getinfo($ch, CURLINFO_REDIRECT_URL) ?: null;
             $err = curl_errno($ch) ? curl_error($ch) : null;
             curl_close($ch);
 
             if ($status === 0) {
                 // curl answered with no HTTP status at all: DNS, refused,
                 // timeout. Ignorance, not a verdict.
-                return ['status' => null, 'bytes' => null, 'ms' => $ms, 'error' => $err ?: 'no response'];
+                return ['status' => null, 'bytes' => null, 'ms' => $ms,
+                        'error' => $err ?: 'no response', 'location' => null];
             }
 
             return ['status' => $status, 'bytes' => is_string($body) ? strlen($body) : 0,
-                    'ms' => $ms, 'error' => $err];
+                    'ms' => $ms, 'error' => $err, 'location' => $location];
         } catch (\Throwable $e) {
             return ['status' => null, 'bytes' => null, 'ms' => null,
-                    'error' => get_class($e) . ': ' . $e->getMessage()];
+                    'error' => get_class($e) . ': ' . $e->getMessage(), 'location' => null];
         }
     }
 }

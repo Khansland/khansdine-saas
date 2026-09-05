@@ -45,10 +45,18 @@ class SiteCheckCommand extends Command
             $this->warn($warning);
         }
 
+        // ★ THE COUNT SEES BOTH PROBES. R-0430.
+        //
+        // This counted only $s['state'] — the EDGE. The origin verdict was
+        // measured, recorded and drawn in the table below while being absent
+        // from the tally and from the exit code, so an entry whose edge
+        // answered 200 and whose origin answered 403 printed "1 checked,
+        // 0 down." and exited 0. Measured, not argued. Every closing
+        // "15 checked, 0 down." from R-0417 to R-0429 was an edge-only claim.
         $down = 0;
         $rows = [];
         foreach ($result['sites'] as $s) {
-            if ($s['state'] === SiteVerdict::DOWN) {
+            if (SiteVerdict::siteState($s)['down']) {
                 $down++;
             }
             $rows[] = [
@@ -66,6 +74,18 @@ class SiteCheckCommand extends Command
             $this->table(['site', 'edge', 'HTTP', 'bytes', 'time', 'origin', 'why'], $rows);
         }
 
+        // ★ NAME WHAT IT SAW. R-0430.
+        //
+        // "15 checked, 0 down." carried thirteen reports and said nothing a
+        // reader could check: not which sites, not what they answered, not
+        // whether the origin was asked at all. One line per site, with the
+        // status from each probe, is the output that could not have hidden
+        // this. It is printed ALWAYS, not only under --print, because the
+        // scheduled run is the one nobody is watching.
+        foreach (SiteVerdict::lines($result['sites']) as $line) {
+            $this->line('  ' . $line);
+        }
+
         if ($result['could_not_check']) {
             // ★ NOT "everything is down".
             $this->warn('COULD NOT CHECK: not one site answered. Reporting ignorance, not an outage.');
@@ -73,7 +93,16 @@ class SiteCheckCommand extends Command
             return self::FAILURE;
         }
 
-        $this->info(sprintf('%d checked, %d down.', count($result['sites']), $down));
+        $downKeys = [];
+        foreach ($result['sites'] as $s) {
+            if (SiteVerdict::siteState($s)['down']) {
+                $downKeys[] = $s['key'];
+            }
+        }
+
+        $this->info(sprintf('%d checked, %d down%s (edge AND origin both counted).',
+            count($result['sites']), $down,
+            $downKeys === [] ? '' : ': ' . implode(', ', $downKeys)));
 
         return $down > 0 ? self::FAILURE : self::SUCCESS;
     }

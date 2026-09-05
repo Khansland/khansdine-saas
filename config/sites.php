@@ -21,6 +21,11 @@
  *              storefronts each answered with a valid HTTP response carrying a
  *              6,592-byte Laravel error page. Floors are set well under each
  *              site's real size and well over that error page.
+ *   expect_location  OPTIONAL, and only meaningful on a 3xx: where the
+ *              redirect is supposed to land. R-0430 — "302" alone says nothing
+ *              about the destination, and a 302 to a parked page carries the
+ *              same number as the login it is supposed to reach. Omit it and
+ *              the entry is judged exactly as before.
  *   origin     true to ALSO ask the origin directly, bypassing Cloudflare.
  *              "edge fine, origin broken" and "origin fine, edge broken" are
  *              different emergencies and one number cannot say which.
