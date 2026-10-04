@@ -76,6 +76,20 @@ return [
         ['key' => 'picnic', 'url' => 'https://picnic.khansdine.com.bd/',
          'expect' => 200, 'min_bytes' => 30000, 'origin' => true, 'note' => 'spoke — was down 14-16 Aug'],
 
+        // ── the restaurant spoke (RS-0002, R-0558, 2026-10-04) ────────────
+        // The storefront measured 39,451 bytes at the edge and 39,202 at the
+        // origin on the day it went live; the floor sits well under that and
+        // well over a framework error page. The spoke has no login page of
+        // its own, so the admin entry watches the DOOR: a guest is sent to the
+        // estate login on hisab. expect_location is compared EXACTLY
+        // (SiteVerdict::judge), so it carries the ?return the door really sends.
+        ['key' => 'restaurant', 'url' => 'https://restaurant.khansdine.com.bd/',
+         'expect' => 200, 'min_bytes' => 20000, 'origin' => true, 'note' => 'restaurant spoke — storefront'],
+        ['key' => 'restaurant-admin', 'url' => 'https://restaurant.khansdine.com.bd/admin',
+         'expect' => 302, 'min_bytes' => 0,
+         'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Frestaurant.khansdine.com.bd%2Fadmin',
+         'origin' => true, 'note' => 'restaurant spoke — back-office door; a guest is sent to the estate login by design'],
+
         // ── the two that are not on the shared layout but are his ─────────
         ['key' => 'khansland', 'url' => 'https://khansland.com.bd/',
          'expect' => 200, 'min_bytes' => 5000, 'origin' => true, 'note' => 'the parent site'],
