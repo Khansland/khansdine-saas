@@ -90,6 +90,22 @@ return [
          'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Frestaurant.khansdine.com.bd%2Fadmin',
          'origin' => true, 'note' => 'restaurant spoke — back-office door; a guest is sent to the estate login by design'],
 
+        // ── the estate landing at the apex (RS-0010, R-0566, 2026-10-07) ──
+        // khansdine.com.bd stopped being the brochure and became the door to
+        // every business. It had NO entry here before. The page measured
+        // 52,166 bytes at the edge and 51,776 at the origin on the day it went
+        // live (the restaurant's highlights section adds a little when its
+        // endpoint answers and is left out when it does not); the floor sits
+        // well under that and well over a framework error page. The admin
+        // entry watches the DOOR, like the restaurant's: a guest is sent to
+        // the estate login with the ?return the door really sends.
+        ['key' => 'landing', 'url' => 'https://khansdine.com.bd/',
+         'expect' => 200, 'min_bytes' => 30000, 'origin' => true, 'note' => 'the estate landing (apex)'],
+        ['key' => 'landing-admin', 'url' => 'https://khansdine.com.bd/admin',
+         'expect' => 302, 'min_bytes' => 0,
+         'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Fkhansdine.com.bd%2Fadmin',
+         'origin' => true, 'note' => 'the estate landing — its admin door; a guest is sent to the estate login by design'],
+
         // ── the two that are not on the shared layout but are his ─────────
         ['key' => 'khansland', 'url' => 'https://khansland.com.bd/',
          'expect' => 200, 'min_bytes' => 5000, 'origin' => true, 'note' => 'the parent site'],
