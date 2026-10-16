@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Schedule;
 
 // The cached tenant statistics are refreshed in the CONSOLE, because the web
 // process cannot open a tenant database and must not be able to.
-Schedule::command('saas:stats')->hourly()->withoutOverlapping();
+// ★ Lock 1 min, not a day (AG-0080, R-0584): worst 4 s (its tenant_stats rows, 10:00:04 UTC),
+// x5 rounded up. On the database store, exactly as exposed to a MySQL restart as site-check was.
+Schedule::command('saas:stats')->hourly()->withoutOverlapping(1);
 
 // ★ IS ANYTHING SERVING? — report site-uptime-watch, 2026-08-16.
 //
