@@ -21,7 +21,18 @@ Schedule::command('saas:stats')->hourly()->withoutOverlapping();
 // It runs HERE because this deployment's scheduler demonstrably executes
 // (saas:stats' rows carry a timestamp from the last hour) and because this is
 // the screen he opens. withoutOverlapping so a slow run never stacks.
+//
+// ★★ AND THE LOCK EXPIRES IN 15 MINUTES, NOT 24 HOURS — AG-0079, R-0583.
+// withoutOverlapping() with no argument holds its lock for 1,440 minutes. On
+// 2026-10-16 MySQL restarted at 03:15 mid-run, the lock row in cache_locks
+// was never released, and every run was skipped until it was deleted by hand
+// at 14:14 (R-0580, R-0581) — eleven hours of a frozen uptime screen. The
+// run length, measured: 17-19 s (14:15:17 and 08:55:19 UTC, 2026-10-16). The
+// worst it can be, by construction: 19 entries x 2 probes x the 10 s
+// request timeout = 380 s, 6.3 min. 15 minutes is 2.4 times that worst case,
+// so a real run is never overlapped, and a stranded lock costs at most two
+// skipped runs. aqua:site-alerts says so on his phone after 30 minutes.
 Schedule::command('saas:site-check')
     ->everyFiveMinutes()
-    ->withoutOverlapping()
+    ->withoutOverlapping(15)
     ->onOneServer();
