@@ -72,5 +72,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('console.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // R-0589: a logged exception carries its shape, never the values - a
+        // QueryException's bindings, a mail transport's recipient. The shared
+        // package registers this in every deployment that discovers it; saas
+        // lists the package in dont-discover, so it registers it here. Only
+        // the logged text changes.
+        \Khansdine\SubdomainShared\Logging\RedactsLoggedExceptions::register($exceptions->handler);
     })->create();
