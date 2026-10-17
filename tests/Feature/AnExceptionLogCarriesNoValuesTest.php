@@ -128,8 +128,11 @@ class AnExceptionLogCarriesNoValuesTest extends TestCase
         $response = $this->app[ExceptionHandler::class]->render(Request::create('/'), $e);
         $this->assertSame(500, $response->getStatusCode());
 
-        report(new \RuntimeException('R0589 plain exception ' . self::EMAIL));
-        $this->assertStringContainsString('R0589 plain exception ' . self::EMAIL, $this->logged(),
+        // An exception with no SQL, no transport and no contact data is logged exactly
+        // as before. (Until R-0591 this carried an e-mail; since R-0591 every record's
+        // addresses become [address], whatever logged it.)
+        report(new \RuntimeException('R0589 plain exception for batch B-2026-014, JE 48213'));
+        $this->assertStringContainsString('R0589 plain exception for batch B-2026-014, JE 48213', $this->logged(),
             'an exception with no SQL and no transport must be logged exactly as before');
     }
 }

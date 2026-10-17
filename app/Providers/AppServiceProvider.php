@@ -9,7 +9,10 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        // R-0591: every log line strips values (SQL bindings, e-mail addresses, BD
+        // mobiles), however it was built. The shared package registers this in every
+        // deployment that discovers it; saas lists it in dont-discover, so it is here.
+        \Khansdine\SubdomainShared\Logging\RedactsLogRecords::register($this->app);
     }
 
     public function boot(): void
