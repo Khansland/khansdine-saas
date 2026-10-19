@@ -16,7 +16,10 @@
     "repositories": [
         {
             "type": "path",
-            "url": "/home/khansdine/packages/khansdine/subdomain-shared"
+            "url": "/home/khansdine/packages/khansdine/subdomain-shared",
+            "options": {
+                "symlink": false
+            }
         }
     ],
     "minimum-stability": "dev",
