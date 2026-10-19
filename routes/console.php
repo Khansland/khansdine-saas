@@ -34,7 +34,15 @@ Schedule::command('saas:stats')->hourly()->withoutOverlapping(1);
 // request timeout = 380 s, 6.3 min. 15 minutes is 2.4 times that worst case,
 // so a real run is never overlapped, and a stranded lock costs at most two
 // skipped runs. aqua:site-alerts says so on his phone after 30 minutes.
-Schedule::command('saas:site-check')
-    ->everyFiveMinutes()
-    ->withoutOverlapping(15)
-    ->onOneServer();
+//
+// ★★★ RETIRED FROM THIS SCHEDULER — AG-0088, R-0597. The uptime check must not
+// live inside what it checks: it needed this app, its scheduler and a lock on
+// the database cache store. It is now /home/khansdine/uptime/uptime-check.sh -
+// bash + curl + jq from the khansdine crontab every 5 minutes, no PHP, no
+// database - writing the SAME site-checks.json, site-history and heartbeat
+// (the file contract is kept, so this console and aqua:site-alerts read it
+// unchanged), and mailing Habib directly as well as the push. A second crontab
+// line (uptime-watch.sh) says so if the file is older than 15 minutes.
+// saas:site-check stays as a command to run by hand (--print); config/sites.php
+// stays the list, and TheUptimeCheckWatchesThisListTest keeps the script's
+// copy equal to it.
