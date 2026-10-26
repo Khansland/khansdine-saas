@@ -75,6 +75,11 @@ return [
          'expect' => 200, 'min_bytes' => 30000, 'origin' => true, 'note' => 'spoke — was down 14-16 Aug'],
         ['key' => 'picnic', 'url' => 'https://picnic.khansdine.com.bd/',
          'expect' => 200, 'min_bytes' => 30000, 'origin' => true, 'note' => 'spoke — was down 14-16 Aug'],
+        // PN-0001 (R-0615): the picnic grew a back office; its door, as the restaurant's
+        ['key' => 'picnic-admin', 'url' => 'https://picnic.khansdine.com.bd/admin',
+         'expect' => 302, 'min_bytes' => 0,
+         'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Fpicnic.khansdine.com.bd%2Fadmin',
+         'origin' => true, 'note' => 'picnic spoke — back-office door (PN-0001); a guest is sent to the estate login by design'],
 
         // ── the restaurant spoke (RS-0002, R-0558, 2026-10-04) ────────────
         // The storefront measured 39,451 bytes at the edge and 39,202 at the
