@@ -80,6 +80,11 @@ return [
          'expect' => 302, 'min_bytes' => 0,
          'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Fpicnic.khansdine.com.bd%2Fadmin',
          'origin' => true, 'note' => 'picnic spoke — back-office door (PN-0001); a guest is sent to the estate login by design'],
+        // PK-0001 (R-0618): the parking grew a back office; its door, as the picnic's
+        ['key' => 'parking-admin', 'url' => 'https://parking.khansdine.com.bd/admin',
+         'expect' => 302, 'min_bytes' => 0,
+         'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Fparking.khansdine.com.bd%2Fadmin',
+         'origin' => true, 'note' => 'parking spoke — back-office door (PK-0001); a guest is sent to the estate login by design'],
 
         // ── the restaurant spoke (RS-0002, R-0558, 2026-10-04) ────────────
         // The storefront measured 39,451 bytes at the edge and 39,202 at the
