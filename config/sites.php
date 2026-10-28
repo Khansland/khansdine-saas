@@ -109,8 +109,11 @@ return [
         // well under that and well over a framework error page. The admin
         // entry watches the DOOR, like the restaurant's: a guest is sent to
         // the estate login with the ?return the door really sends.
+        // ★ AX-0001 (2026-10-28): the page became the front door — five cards, no shop, no brochure footer —
+        // and measures 30,520-32,798 bytes (en..bn) instead of 52,166; Habib switching cards off or shortening
+        // texts makes it smaller still. 20,000 keeps three times a framework error page (6,592) under it.
         ['key' => 'landing', 'url' => 'https://khansdine.com.bd/',
-         'expect' => 200, 'min_bytes' => 30000, 'origin' => true, 'note' => 'the estate landing (apex)'],
+         'expect' => 200, 'min_bytes' => 20000, 'origin' => true, 'note' => 'the estate landing (apex)'],
         ['key' => 'landing-admin', 'url' => 'https://khansdine.com.bd/admin',
          'expect' => 302, 'min_bytes' => 0,
          'expect_location' => 'https://hisab.khansdine.com.bd/login?return=https%3A%2F%2Fkhansdine.com.bd%2Fadmin',
